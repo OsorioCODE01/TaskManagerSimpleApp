@@ -1,0 +1,50 @@
+{% extends '/Bases/base.html'%} 
+{%block title%}
+    {{super()}}
+    Reporte Usuarios
+{%endblock%}
+
+{%block content%}
+<table class="table-bordered bg-light table-hover">
+  <thead>
+    <tr>
+      <th>DNI</th>
+      <th>Primer Nombre</th>
+      <th>Segundo Nombre</th>
+      <th>Primer Apellido</th>
+      <th>Segundo Apellido</th>
+      <th>Telefono</th>
+      <th>Fecha Nacimiento</th>
+      <th>Direccion</th>
+      <th>Administador (bool)</th>
+      <th>username</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in data %}
+    <tr>
+      <td>{{ row[0] }}</td>
+      <td>{{ row[1] }}</td>
+      <td>{{ row[2] }}</td>
+      <td>{{ row[3] }}</td>
+      <td>{{ row[4] }}</td>
+      <td>{{ row[5] }}</td>
+      <td>{{ row[6] }}</td>
+      <td>{{ row[7] }}</td>
+      <td>{{ row[8] }}</td>
+      <td>{{ row[9] }}</td>
+      <td>
+        <a href="{{url_for('editar', id=row[0]) }}" class="btn btn-primary">Editar</a>
+        {%if row[0] == 99887766%}
+        <a href="{{url_for('SuperUser')}}" class="btn btn-success">SuperUser</a>
+        {%else%}
+        <a  href="{{url_for('eliminar',id=row[0])}}" class="btn btn-danger">Eliminar</a>
+        {%endif%}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{%endblock%}

@@ -1,0 +1,70 @@
+{%extends '/Bases/base.html'%}
+
+{%block title%}
+{{super()}}
+ Iniciar Sesion
+{%endblock%}
+
+{%block content%}
+<div class="container">
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <div class="card mt-3">
+
+            <h5 class="card-header info-color white-text text-center py-4">
+                <strong>Iniciar Sesion</strong>
+            </h5>
+        
+            <div class="card-body px-lg-5 pt-0">
+        
+                <form class="md-form" style="color: #868686;" action="/login" method="post" autocomplete="off">
+        
+                    <input type="text" id="materialLoginFormEmail" class="form-control mt-3" name="username">
+                    <label for="materialLoginFormEmail">Username</label>
+                
+                    <div class="form-group">
+
+                        <div class="input-group">
+                          <input type="password" class="form-control" id="password" name="password">
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="show-password-btn">
+                              <i class="fa fa-eye"></i>
+                            </button>
+                          </div>
+                        </div>
+                    </div>
+                      <label for="materialLoginFormPassword">Password</label>
+                      
+                      <script>
+                        const passwordInput = document.querySelector('#password');
+                        const showPasswordBtn = document.querySelector('#show-password-btn');
+                        
+                        showPasswordBtn.addEventListener('click', () => {
+                          if (passwordInput.type === 'password') {
+                            passwordInput.type = 'text';
+                          } else {
+                            passwordInput.type = 'password';
+                          }
+                        });
+                      </script>
+                      
+                    <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Iniciar</button>
+        
+                    <div class="text-center">
+                        <p>No tienes cuenta?
+                            <a href="{{url_for('AgregarUser')}}">Registrarme</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+      </div>
+    </div>
+</div>
+
+{%endblock%}
+
+
+

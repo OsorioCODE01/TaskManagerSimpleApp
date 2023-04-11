@@ -1,0 +1,106 @@
+{%extends '/Bases/base.html'%}
+
+{%block title%}
+    {{super()}}
+    Edicion
+{%endblock%}
+{%block content%}
+<div class="container">
+    <h2>Editando Perfil:</h2>
+    <form class="form-horizontal" action="/guardar_cambios/{{ data[0] }}" autocomplete="off"  style="color: #868686;" method="post">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <div class="row row-centered">
+                    <div class="col-xs-12 col-sm-6 col-centered">
+                        <div class="form-group">
+                            <label for="DNI">DNI:</label>
+                            <input type="text" name="DNI" class="form-control" value="{{data[0]}}" readonly>
+                        </div>
+
+                        <div class="form-gruop">
+                            <label for="primer_nombre">Primer nombre*:</label>
+                            <input type="text" name="primer_nombre"  class="form-control" value="{{ data[1] }}" />
+                        </div>
+
+                        <div class="form-gruop">
+                            <label for="segundo_nombre">Segundo nombre:</label>
+                            <input type="text" name="segundo_nombre"  class="form-control" value="{{ data[2] }}" />
+                        </div>
+
+                        <div class="form-gruop">
+                            <label for="primer_apellido">Primer apellido*:</label>
+                            <input type="text" name="primer_apellido" class="form-control" value="{{ data[3] }}" />    
+                        </div>
+
+                        <div class="form-gruop">
+                            <label for="segundo_apellido">Segundo apellido:</label>
+                            <input type="text" name="segundo_apellido" class="form-control"  value="{{ data[4] }}"/>
+                        </div>
+                        {%if session['Admin'] == 1%}
+                        <div>
+                            <label for="admin">Admin:</label>
+                            <input type="number" name="admin" class="form-control"  value="{{ data[8] }}" />
+                        </div>
+                        {%else%}
+                            <input type="hidden" name="admin" class="form-control"  value="{{ data[8] }}" />
+                        {%endif%}
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-centered">
+                        
+                        <div class="form-gruop">
+                            <label for="telefono">Telefono*:</label>
+                            <input type="text" name="telefono" class="form-control" value="{{ data[5] }}" />            
+                        </div>
+                        <div class="form-gruop">
+                            <label for="fecha_nacimiento">Fecha de nacimiento*:</label>
+                            <input type="date" name="fecha_nacimiento" class="form-control" value="{{data[6]}}"/>          
+                        </div>
+                        <div class="form-gruop"> 
+                            <label for="direccion">Direccion*:</label>
+                            <input type="text" name="direccion"class="form-control"  value="{{ data[7] }}" /> 
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Nombre de Usuario</label>
+                            <input type="text" name="username"  class="form-control" value="{{data[9]}}">
+                        </div>
+                        <div class="form-gruop">
+                            <label for="password">Contraseña: </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password" value="{{data[10]}}">
+                                <div class="input-group-append">
+                                  <button class="btn btn-outline-secondary" type="button" id="show-password-btn">
+                                    <i class="fa fa-eye"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              
+                              <script>
+                                const passwordInput = document.querySelector('#password');
+                                const showPasswordBtn = document.querySelector('#show-password-btn');
+                                
+                                showPasswordBtn.addEventListener('click', () => {
+                                  if (passwordInput.type === 'password') {
+                                    passwordInput.type = 'text';
+                                  } else {
+                                    passwordInput.type = 'password';
+                                  }
+                                });
+                              </script>
+                        </div>
+                       
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div>
+            <input type="submit" value="Guardar Cambios" class="btn btn-success mt-3" />
+        </div>
+    </form>
+
+</div>
+{%endblock%}
+
+
+

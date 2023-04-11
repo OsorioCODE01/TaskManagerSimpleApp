@@ -1,0 +1,55 @@
+{% extends '/Bases/base.html'%} 
+{%block title%}
+    {{super()}}
+    Reporte Tareas
+{%endblock%}
+
+{%block content%}
+<table class="table-bordered bg-light table-hover">
+  <thead>
+    <tr>
+      <th>Task id:</th>
+      <th>User id:</th>
+      <th>Task name</th>
+      <th>ShowTask</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Start</th>
+      <th>Finish</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in data %}
+    <tr>
+      <td>{{ row[0] }}</td>
+      <td>{{ row[1] }}</td>
+      <td>{{ row[2] }}</td>
+      <td>
+        {%if row[3] == 1%}
+        True
+        {%else%}
+        Fasle 
+        {%endif%}
+      </td>
+      <td>
+        {{ row[4] }}
+      </td>
+      <td>
+        {%if  row[5]  == 1%}
+        Iniciada
+        {%else%}
+        Terminada 
+        {%endif%}       
+        </td>
+      <td>{{ row[6] }}</td>
+      <td>{{ row[7] }}</td>
+
+      <td>
+        <a href="{{url_for('editar_task', id=row[0])}}" class="btn btn-primary">EditarTarea</a> 
+        <a  href="{{url_for('eliminar_task_perma',id=row[0])}}" class="btn btn-danger">Eliminar(Permanente)</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{%endblock%}

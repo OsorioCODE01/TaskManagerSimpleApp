@@ -1,0 +1,6 @@
+flask
+bootstrap-flask
+flask-wtf
+flask-testing
+mysql-connector-python
+flask_mysqldb

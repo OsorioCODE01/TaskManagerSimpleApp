@@ -1,0 +1,62 @@
+{%extends '/Bases/base.html'%}
+
+{%block title%}
+{{super()}}
+Mis tareas
+{%endblock%}
+
+{%block content%}
+<div class="container">
+    <h3>TAREAS EN PROGRESO:</h3>
+    <div class="row">
+         {% for item in data%}
+            {%if item[3] == 1  and item[5]==1%}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card mb-4">
+                    <div class="card-body">
+                    <h5 class="card-title">{{ item[2] }}:</h5>
+                    <p class="card-text  border p-3">{{ item[4] }}</p>
+                    <i>
+                        <a href="{{url_for('editar_task', id=item[0])}}" class="btn btn-primary">EditarTarea</a> 
+                    </i>
+                    <i>
+                        <a href="{{url_for('Terminar_task', id=item[0])}}" class="btn btn-success">TerminarTarea</a>
+                    </i>
+                    <i>
+                        <a href="{{url_for('eliminar_task', id=item[0])}}" class="btn btn-danger">Elimnar</a>
+                    </i>
+                    
+                </div>
+            </div>
+            {%endif%}
+            </div>
+        {% endfor %}
+    </div>
+<div class="container"><a href="{{url_for('AgregarTask')}}" class="btn btn-success">Agregar Tarea</a></div>    
+</div>
+  
+
+  <div class="container">
+    <h3>TAREAS TERMINADAS:</h3>
+    <div class="row">
+         {% for item in data %}
+            {%if item[3] == 1 and item[5] == 0%}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card mb-4">
+                    <div class="card-body">
+                    <h5 class="card-title">{{ item[2] }}:</h5>
+                    <p class="card-text  border p-3">{{ item[4] }}</p>
+
+                    <i>
+                        <a href="{{url_for('eliminar_task', id=item[0])}}" class="btn btn-danger">Elimnar</a>
+                    </i>
+                    
+                </div>
+          </div>
+          {%endif%}
+            </div>
+        {% endfor %}
+      
+    </div>
+  </div>
+{%endblock%}

@@ -1,0 +1,95 @@
+{%extends '/Bases/base.html'%}
+
+{%block title%}
+ {{super()}}
+ Agregando
+{%endblock%}
+
+{%block content%}
+
+<div class="container">
+    <h2>Registro:</h2>
+
+    <form class="form-horizontal" action="/AgregarUser" method="post"  style="color: #868686;" autocomplete="off">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <div class="row row-centered">
+                    <div class="col-xs-12 col-sm-6 col-centered">
+                        <div class="form-group">
+                            <label for="DNI">DNI*:</label>
+                            <input type="text" id="exampleFormControlInput1" name="DNI" class="form-control" placeholder="Ingrese indetificacion"/>
+                        </div>
+
+                        <div class="form-gruop">
+                            <label for="primer_nombre">Primer nombre*:</label>
+                            <input type="text" name="primer_nombre" class="form-control" placeholder="Ingrese primer nombre"/>
+                        </div>
+
+                        <div class="form-gruop">
+                            <label for="segundo_nombre">Segundo nombre:</label>
+                            <input type="text" name="segundo_nombre" class="form-control" placeholder="Ingrese segundo nombre (Opcional)"/>
+                        </div>
+
+                        <div class="form-gruop">
+                            <label for="primer_apellido">Primer apellido*:</label>
+                            <input type="text" name="primer_apellido" class="form-control" placeholder="Ingrese segundo"/>    
+                        </div>
+
+                        <div class="form-gruop">
+                            <label for="segundo_apellido">Segundo apellido:</label>
+                            <input type="text" name="segundo_apellido" class="form-control" placeholder="Ingrese Segundo apellido(opcional)"/>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-centered">
+                        
+                        <div class="form-gruop">
+                            <label for="telefono">Telefono*:</label>
+                            <input type="text" name="telefono" placeholder="Ingrese Telefono" class="form-control"/>            
+                        </div>
+                        <div class="form-gruop">
+                            <label for="fecha_nacimiento">Fecha de nacimiento*:</label>
+                            <input type="date" name="fecha_nacimiento" placeholder="Fecha de nacimiento" class="form-control"/>            
+                        </div>
+                        <div class="form-gruop"> 
+                            <label for="direccion">Direccion*:</label>
+                            <input type="text" name="direccion" placeholder="Ingrese Direccion" class="form-control"/>  
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Nombre de Usuario</label>
+                            <input type="text" name="username" placeholder="Username" class="form-control">
+                        </div>
+                        <div class="form-gruop">
+                            <label for="password">Contraseña: </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password">
+                                <div class="input-group-append">
+                                  <button class="btn btn-outline-secondary" type="button" id="show-password-btn">
+                                    <i class="fa fa-eye"></i>
+                                  </button>
+                                  <script>
+                                    const passwordInput = document.querySelector('#password');
+                                    const showPasswordBtn = document.querySelector('#show-password-btn');
+                                    
+                                    showPasswordBtn.addEventListener('click', () => {
+                                      if (passwordInput.type === 'password') {
+                                        passwordInput.type = 'text';
+                                      } else {
+                                        passwordInput.type = 'password';
+                                      }
+                                    });
+                                  </script>
+                                </div>
+                              </div>
+                        </div>                  
+                    </div>                  
+                </div>
+            </div>
+        </div>
+        <div class="form-gruop">
+            <input type="submit" value="Registrame" class=" btn btn-success mt-3" />
+        </div>
+    </form>
+
+</div>
+{%endblock%}

@@ -1,0 +1,23 @@
+{% extends '/Bases/base.html'%} 
+{%block title%}
+    {{super()}}
+    Bienvenido 
+{%endblock%}
+
+{%block content%}
+<div class="container my-5">
+    <div class="card text-center">
+      <div class="card-header">
+        <h3 class="card-title">¡Hola, Bienvenido a Task Manager</h3>
+      </div>
+      <div class="card-body">
+        <img src="/static/images/Logo.png" alt="Logo de la card" class="rounded-circle mb-3" width="250" height="250">
+        <p class="card-text">Esta es una pequeña aplicacion para el manejo de tareas, cuenta con un sistema de login que perimite tener multiples usuarios sin que sus tareas se vean
+            comprometidas con otros usuarios, estos, cuentan evidentemente con un acceso limitado a las cosultas que solo puede ver un usuario root (username:root password: 12345),
+            el cual puede moverse libremente por todas las vistas y alterar informacion de tareas y usuarios en general, te invito a que pruebes estas funciones.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+{%endblock%}

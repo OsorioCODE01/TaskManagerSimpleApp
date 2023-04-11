@@ -1,0 +1,38 @@
+{%extends '/Bases/base.html'%}
+
+{%block title%}
+{{super()}}
+Agregar Tarea
+{%endblock%}
+
+{%block content%}
+<div class="container">
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <div class="card mt-3">
+
+            <h5 class="card-header info-color white-text text-center py-4">
+                <strong>Agregar Tarea</strong>
+            </h5>
+        
+            <div class="card-body px-lg-5 pt-0">
+        
+                <form class="md-form" style="color: #868686;" action="/AgregarTask" method="post" autocomplete="off">
+                    <label for="task_name">Nombre de la tarea</label>
+                    <input type="text"class="form-control mt-3" name="task_name">
+                    
+                    <label for="description">Descripcion</label>
+                    <div class="form-group">
+                        <textarea name="description" rows="4" cols="50"></textarea>
+                    </div>
+                    <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Guardar Tarea</button>
+        
+                </form>
+            </div>
+        </div>
+
+
+      </div>
+    </div>
+</div>
+{%endblock%}
