@@ -4,3 +4,4 @@ flask-wtf
 flask-testing
 mysql-connector-python
 flask_mysqldb
+python-dotenv

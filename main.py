@@ -3,6 +3,16 @@ from flask_mysqldb import MySQL
 from flask_bootstrap import  Bootstrap4
 import mysql.connector
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+MYSQL_HOST = os.getenv('MYSQL_HOST')
+MYSQL_USER = os.getenv('MYSQL_USER')
+MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
+MYSQL_DB= os.getenv('MYSQL_DB')
+
 
 app = Flask(__name__)
 app.config.update(
@@ -10,10 +20,12 @@ app.config.update(
 )
 app.secret_key = 'Im_the_key'
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'tmdb'
+app.config['MYSQL_HOST'] = MYSQL_HOST
+app.config['MYSQL_USER'] = MYSQL_USER
+app.config['MYSQL_PASSWORD'] = MYSQL_PASSWORD
+app.config['MYSQL_DB'] = MYSQL_DB
+
+
 
 mysql = MySQL(app)
 
