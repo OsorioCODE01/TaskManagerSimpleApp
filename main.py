@@ -16,7 +16,7 @@ MYSQL_DB= os.getenv('MYSQL_DB')
 
 app = Flask(__name__)
 app.config.update(
-    DEBUG=True
+    DEBUG=False
 )
 app.secret_key = 'Im_the_key'
 
