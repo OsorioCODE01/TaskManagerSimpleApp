@@ -12,6 +12,7 @@ MYSQL_HOST = os.getenv('MYSQL_HOST')
 MYSQL_USER = os.getenv('MYSQL_USER')
 MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
 MYSQL_DB= os.getenv('MYSQL_DB')
+PORT= os.getenv('PORT')
 
 
 app = Flask(__name__)
@@ -284,4 +285,4 @@ def guardar_cambios(id):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=PORT)
