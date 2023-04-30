@@ -6,6 +6,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 import os
 
+#Declaracion de variables de entorno
 load_dotenv()
 
 MYSQL_HOST = os.getenv('MYSQL_HOST')
@@ -19,8 +20,9 @@ app = Flask(__name__)
 app.config.update(
     DEBUG=False
 )
-app.secret_key = 'Im_the_key'
+app.secret_key = 'Im_the_key' #llave de incriptacion de sessions
 
+#Configuracion de la base de datos
 app.config['MYSQL_HOST'] = MYSQL_HOST
 app.config['MYSQL_USER'] = MYSQL_USER
 app.config['MYSQL_PASSWORD'] = MYSQL_PASSWORD
@@ -33,15 +35,15 @@ mysql = MySQL(app)
 bootstrap = Bootstrap4(app)
 
 #Manejo de erroes
-@app.errorhandler(404)
+@app.errorhandler(404) #ERROR CLIENTE
 def not_found(error):
     return render_template('/Public/404.html', error=error)
 
-@app.errorhandler(500)
+@app.errorhandler(500) #ERROR DE SERVIDOR
 def internal_server_error(error):
     return render_template('/Public/500.html', error=error)
 
-@app.route('/')
+@app.route('/')#pagina principal
 def index ():
     return render_template('/Public/index.html')
 
@@ -93,7 +95,7 @@ def logout():
     flash('Adios, esperamos verte pronto','info')
     return redirect('/')
 
-@app.route('/perfil')
+@app.route('/perfil') #Vista individual del perfil del usuario
 def perfil():
     cursor = mysql.connection.cursor()
     user_id = session['user_id']
@@ -102,7 +104,7 @@ def perfil():
     cursor.close()
     return render_template('/Public/perfil.html', data=data)
 
-@app.route('/UserTasks')
+@app.route('/UserTasks') # Consulta indiviual de las tareas de casa usuario
 def UserTasks():
     if 'user_id' in session:
 
@@ -118,7 +120,7 @@ def UserTasks():
         flash('Primero debes iniciar sesion','info')
         return redirect(url_for('index'))
     
-@app.route('/AgregarTask', methods=['GET', 'POST'])
+@app.route('/AgregarTask', methods=['GET', 'POST']) #Agregacion de nuevaas tareas
 def AgregarTask():
     if request.method == 'POST':
         user_id = session['user_id']
@@ -145,7 +147,7 @@ def AgregarTask():
         return redirect(url_for('UserTasks'))
     return render_template('/Public/AgregarTask.html')
     
-@app.route('/AgregarUser', methods=['GET', 'POST'])
+@app.route('/AgregarUser', methods=['GET', 'POST']) #Agregacion de nuevos usuarios
 def AgregarUser():
     if request.method == 'POST':
         #Recuperando datos del formulario
@@ -207,7 +209,7 @@ def users():
     else:
         return render_template('/Public/acces_deined.html')
 #------------------------------------------------------------------------------------------------------
-@app.route('/AllTasks')
+@app.route('/AllTasks') #Consulta exclusiva para user admin, TODAS las tareas de los usuarios
 def AllTasks():
     if session['Admin'] == 1:
         cur = mysql.connection.cursor()
@@ -319,8 +321,9 @@ def eliminar(id):
 
     return redirect(url_for('users'))
 #------------------------------------------------------------------------------------------------------------------
-@app.route('/guardar_cambios_task/<int:id>', methods=['POST'])
+@app.route('/guardar_cambios_task/<int:id>', methods=['POST']) #Guardado de cambios en una tarea
 def guardar_cambios_task(id):
+    #Parte Logica:
     task_name = request.form['task_name']
     description = request.form['description']
     ShowTask = request.form['ShowTask']
@@ -329,7 +332,7 @@ def guardar_cambios_task(id):
     mysql.connection.commit()
     cursor.close()
     flash('Cambios guardados con exito', 'success')
-        #Registro en el log:
+    #Registro en el log:
     user_id = session['user_id']
     accion = "Edicion de Tarea con id: {}".format(id)
     tabla = "Tasks"
@@ -344,7 +347,7 @@ def guardar_cambios_task(id):
         return redirect('/UserTasks')
 
 #------------------------------------------------------------------------------------------------------
-@app.route('/guardar_cambios/<int:id>', methods=['POST'])
+@app.route('/guardar_cambios/<int:id>', methods=['POST']) #Guardado de cambios en la edicion de un perfil
 def guardar_cambios(id):
     #Funcionamiento logico
     primer_nombre = request.form['primer_nombre']
