@@ -17,7 +17,7 @@ PORT= os.getenv('PORT')
 
 app = Flask(__name__)
 app.config.update(
-    DEBUG=True
+    DEBUG=False
 )
 app.secret_key = 'Im_the_key'
 
@@ -383,4 +383,4 @@ def guardar_cambios(id):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=PORT)
