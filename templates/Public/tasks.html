@@ -9,54 +9,58 @@ Mis tareas
 <div class="container">
     <h3>TAREAS EN PROGRESO:</h3>
     <div class="row">
-         {% for item in data%}
-            {%if item[3] == 1  and item[5]==1%}
-            <div class="col-sm-6 col-md-4 col-lg-3">
-                <div class="card mb-4">
-                    <div class="card-body">
-                    <h5 class="card-title">{{ item[2] }}:</h5>
-                    <p class="card-text  border p-3">{{ item[4] }}</p>
-                    <i>
-                        <a href="{{url_for('editar_task', id=item[0])}}" class="btn btn-primary">EditarTarea</a> 
-                    </i>
-                    <i>
-                        <a href="{{url_for('Terminar_task', id=item[0])}}" class="btn btn-success">TerminarTarea</a>
-                    </i>
-                    <i>
-                        <a href="{{url_for('eliminar_task', id=item[0])}}" class="btn btn-danger">Elimnar</a>
-                    </i>
-                    
-                </div>
+      {% for item in data %}
+      {%if item[3] == 1  and item[5]==1%}
+        <div class="col-sm-4 mb-3">
+          <div class="card h-100" style="max-width: 300px;">
+            <div class="card-body">
+                <h5 class="card-title">{{ item[2] }}:</h5>
+                <p class="card-text  border p-3">{{ item[4] }}</p>
+                <i>
+                    <a href="{{url_for('editar_task', id=item[0])}}" class="btn btn-primary"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>  
+                </i>
+                <i>
+                    <a href="{{url_for('Terminar_task', id=item[0])}}" class="btn btn-success"><i class="fa fa-check-circle-o" aria-hidden="true"></i></a> 
+                </i>
+                <i>
+                    <a href="{{url_for('eliminar_task', id=item[0])}}" class="btn btn-danger"><i class="fa fa-window-close" aria-hidden="true"></i></a> 
+                </i>
             </div>
-            {%endif%}
-            </div>
-        {% endfor %}
+          </div>
+        </div>
+        {% if loop.index % 3 == 0 %}
+        </div><div class="row">
+        {% endif %}
+        {%endif%}
+      {% endfor %}
     </div>
-<div class="container"><a href="{{url_for('AgregarTask')}}" class="btn btn-success">Agregar Tarea</a></div>    
-</div>
+  </div>
+  </div>
   
 
   <div class="container">
     <h3>TAREAS TERMINADAS:</h3>
     <div class="row">
-         {% for item in data %}
-            {%if item[3] == 1 and item[5] == 0%}
-            <div class="col-sm-6 col-md-4 col-lg-3">
-                <div class="card mb-4">
-                    <div class="card-body">
-                    <h5 class="card-title">{{ item[2] }}:</h5>
-                    <p class="card-text  border p-3">{{ item[4] }}</p>
-
-                    <i>
-                        <a href="{{url_for('eliminar_task', id=item[0])}}" class="btn btn-danger">Elimnar</a>
-                    </i>
-                    
-                </div>
-          </div>
-          {%endif%}
+      {% for item in data %}
+      {%if item[3] == 1  and item[5]==0%}
+        <div class="col-sm-4 mb-3">
+          <div class="card h-100" style="max-width: 300px;">
+            <div class="card-body">
+                <h5 class="card-title">{{ item[2] }}:</h5>
+                <p class="card-text  border p-3">{{ item[4] }}</p>
+                <i>
+                    <a href="{{url_for('eliminar_task', id=item[0])}}" class="btn btn-danger"><i class="fa fa-window-close" aria-hidden="true"></i></a> 
+                </i>
             </div>
-        {% endfor %}
-      
+          </div>
+        </div>
+        {% if loop.index % 3 == 0 %}
+        </div><div class="row">
+        {% endif %}
+        {%endif%}
+      {% endfor %}
     </div>
   </div>
+  </div>
+
 {%endblock%}

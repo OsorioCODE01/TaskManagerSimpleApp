@@ -17,7 +17,7 @@ PORT= os.getenv('PORT')
 
 app = Flask(__name__)
 app.config.update(
-    DEBUG=False
+    DEBUG=True
 )
 app.secret_key = 'Im_the_key'
 
@@ -40,10 +40,21 @@ def not_found(error):
 @app.errorhandler(500)
 def internal_server_error(error):
     return render_template('/Public/500.html', error=error)
+
 @app.route('/')
 def index ():
     return render_template('/Public/index.html')
 
+@app.route('/logs')#Consulta Para ver el resgistro de logs
+def logs():
+    if session['Admin'] == 1:
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM logs ")
+        data = cursor.fetchall()
+        cursor.close()
+        return render_template('/Public/logs.html', data=data)
+    else:
+        return render_template('/Public/acces_deined.html')
 
 @app.route('/login', methods=['GET', 'POST']) #Verficiacion de credenciales
 def login():
@@ -121,6 +132,16 @@ def AgregarTask():
         mysql.connection.commit()
         cursor.close()
         flash('Tarea guardada con exito.','success')
+
+        #Resgistro en log
+        user_id = session['user_id']
+        accion = "Creo nueva tarea"
+        tabla = "tasks"
+        log = mysql.connection.cursor()
+        log.execute('INSERT INTO logs (user_id, accion, tabla) VALUES (%s,%s,%s) ', (user_id, accion, tabla))
+        mysql.connection.commit()
+        log.close()
+
         return redirect(url_for('UserTasks'))
     return render_template('/Public/AgregarTask.html')
     
@@ -160,8 +181,17 @@ def AgregarUser():
         cur.execute("INSERT INTO users (DNI ,primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, fecha_nacimiento, direccion, username, password) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (DNI,primer_nombre,segundo_nombre,primer_apellido,segundo_apellido,telefono,fecha_nacimiento,direccion,username,password))
         mysql.connection.commit()
         cur.close()
-
         flash('Informacio ingresada con exito','success')
+
+        #Resgistro en log
+        user_id = request.form['DNI']
+        accion = "Nuevo User: {}".format(request.form['primer_nombre'])
+        tabla = "users"
+        log = mysql.connection.cursor()
+        log.execute('INSERT INTO logs (user_id, accion, tabla) VALUES (%s,%s,%s) ', (user_id, accion, tabla))
+        mysql.connection.commit()
+        log.close()
+
         return render_template('/Public/login.html') 
     return render_template('/Public/AgregarUser.html')
 
@@ -212,11 +242,22 @@ def editar_task(id):
 #.---------------------------------------------------------------------------------------------------------------------------
 @app.route('/eiliminar_task/<int:id>', methods=['GET','POST']) #Borrado logico de una tarea a partir de la id
 def eliminar_task(id):
+    #Parte logica:
     cursor = mysql.connection.cursor()
     cursor.execute('UPDATE tasks SET ShowTask=%s WHERE task_id = %s;', (0,id))
     mysql.connection.commit()
     cursor.close()
     flash('Tarea eliminada','danger')
+
+    #Regsitro en log:
+    user_id = session['user_id']
+    accion = "Eliminado logico Tarea con id: {}".format(id)
+    tabla = "Tasks"
+    log = mysql.connection.cursor()
+    log.execute('INSERT INTO logs (user_id, accion, tabla) VALUES (%s,%s,%s) ', (user_id, accion, tabla))
+    mysql.connection.commit()
+    log.close()
+    
     return redirect(url_for('UserTasks'))
 #----------------------------------------------------------------------------------------------------------------------
 @app.route('/eiliminar_task_perma/<int:id>', methods=['GET','POST']) #Borrado permamente de una tarea a partir de la id
@@ -226,35 +267,77 @@ def eliminar_task_perma(id):
     mysql.connection.commit()
     cursor.close()
     flash('Tarea eliminada de forma permamente', 'danger')
+
+    #Regsitro en log:
+    user_id = session['user_id']
+    accion = "Eliminado perma Tarea con id: {}".format(id)
+    tabla = "Tasks"
+    log = mysql.connection.cursor()
+    log.execute('INSERT INTO logs (user_id, accion, tabla) VALUES (%s,%s,%s) ', (user_id, accion, tabla))
+    mysql.connection.commit()
+    log.close()
+
     return redirect(url_for('AllTasks'))
 #---------------------------------------------------------------------------------------------
 @app.route('/Terminar_task/<int:id>', methods=['GET','POST']) #Finalizacion de tarea
 def Terminar_task(id):
+    #Parte logica:
     finish = datetime.now()
     cursor = mysql.connection.cursor()
     cursor.execute('UPDATE tasks SET status=%s, finish=%s  WHERE task_id = %s;', (0,finish,id))
     mysql.connection.commit()
     cursor.close()
     flash('¡Tarea finalizada!','success')
+
+    #Registro en el log:
+    user_id = session['user_id']
+    accion = "Finalizacion Tarea con id: {}".format(id)
+    tabla = "Tasks"
+    log = mysql.connection.cursor()
+    log.execute('INSERT INTO logs (user_id, accion, tabla) VALUES (%s,%s,%s) ', (user_id, accion, tabla))
+    mysql.connection.commit()
+    log.close()
+
     return redirect(url_for('UserTasks'))
 #-------------------------------------------------------------------------------------------------
 @app.route('/eiliminar/<int:id>', methods=['GET','POST']) #ELIMINAR USUARIOS DE LA DB A PARTIR DE LA ID
 def eliminar(id):
+    #PARTE LOGICA
     cursor = mysql.connection.cursor()
     cursor.execute('DELETE FROM users WHERE DNI = %s;', (id,))
     mysql.connection.commit()
     cursor.close()
+    flash(f'El Usuario {id} y todos sus registros han sido eliminados', 'danger')
+    #REGISTRO EN LOG
+    user_id = session['user_id']
+    accion = "Eliminacion user: {}".format(id)
+    tabla = "users"
+    log = mysql.connection.cursor()
+    log.execute('INSERT INTO logs (user_id, accion, tabla) VALUES (%s,%s,%s) ', (user_id, accion, tabla))
+    mysql.connection.commit()
+    log.close()
+
     return redirect(url_for('users'))
 #------------------------------------------------------------------------------------------------------------------
 @app.route('/guardar_cambios_task/<int:id>', methods=['POST'])
 def guardar_cambios_task(id):
     task_name = request.form['task_name']
     description = request.form['description']
+    ShowTask = request.form['ShowTask']
     cursor = mysql.connection.cursor()
-    cursor.execute("UPDATE tasks SET task_name=%s, description=%s WHERE task_id=%s", (task_name, description, id) )
+    cursor.execute("UPDATE tasks SET task_name=%s, description=%s, ShowTask=%s WHERE task_id=%s", (task_name, description,ShowTask, id) )
     mysql.connection.commit()
     cursor.close()
     flash('Cambios guardados con exito', 'success')
+        #Registro en el log:
+    user_id = session['user_id']
+    accion = "Edicion de Tarea con id: {}".format(id)
+    tabla = "Tasks"
+    log = mysql.connection.cursor()
+    log.execute('INSERT INTO logs (user_id, accion, tabla) VALUES (%s,%s,%s) ', (user_id, accion, tabla))
+    mysql.connection.commit()
+    log.close()
+
     if session['Admin'] == 1:
         return redirect('/AllTasks')
     else:
@@ -263,6 +346,7 @@ def guardar_cambios_task(id):
 #------------------------------------------------------------------------------------------------------
 @app.route('/guardar_cambios/<int:id>', methods=['POST'])
 def guardar_cambios(id):
+    #Funcionamiento logico
     primer_nombre = request.form['primer_nombre']
     segundo_nombre = request.form['segundo_nombre']
     primer_apellido = request.form['primer_apellido']
@@ -271,10 +355,24 @@ def guardar_cambios(id):
     fecha_nacimiento = request.form['fecha_nacimiento']
     direccion = request.form['direccion']
     admin = request.form['admin']
+    username = request.form['username']
+    password = request.form['password']
     cursor = mysql.connection.cursor()
-    cursor.execute('UPDATE users SET primer_nombre=%s, segundo_nombre=%s, primer_apellido=%s, segundo_apellido=%s, telefono=%s, fecha_nacimiento=%s, direccion=%s, admin=%s WHERE DNI=%s', (primer_nombre, segundo_nombre,primer_apellido,segundo_apellido,telefono,fecha_nacimiento,direccion,admin, id))
+    cursor.execute('UPDATE users SET primer_nombre=%s, segundo_nombre=%s, primer_apellido=%s, segundo_apellido=%s, telefono=%s, fecha_nacimiento=%s, direccion=%s, admin=%s, username=%s, password=%s WHERE DNI=%s', (primer_nombre, segundo_nombre,primer_apellido,segundo_apellido,telefono,fecha_nacimiento,direccion,admin,username,password, id))
     mysql.connection.commit()
     cursor.close()
+    #Registro en el log:
+    user_id = id
+    accion = "Edicion del perfil."
+    tabla = "users"
+    log = mysql.connection.cursor()
+    log.execute('INSERT INTO logs (user_id, accion, tabla) VALUES (%s,%s,%s) ', (user_id, accion, tabla))
+    mysql.connection.commit()
+    log.close()
+
+
+
+    #Alertas:
     if session['Admin'] == 1:
         flash('Cambios guardados con exito', 'success')
         return redirect('/users')
@@ -285,4 +383,4 @@ def guardar_cambios(id):
 
 
 if __name__ == "__main__":
-    app.run(port=PORT)
+    app.run()

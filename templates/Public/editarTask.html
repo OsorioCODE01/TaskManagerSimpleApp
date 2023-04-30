@@ -25,6 +25,12 @@ Editar Tarea
                     <div class="form-group">
                         <textarea name="description" rows="4" cols="50">{{data[4]}}</textarea>
                     </div>
+                    {%if session['Admin'] == 1%}
+                    <div class="form-group">
+                        <label for="ShowTask"> Mostrar Tarea</label>
+                        <input type="text" class="form-control mt-3" name="ShowTask" value="{{data[5]}}">
+                    </div>
+                    {%endif%}
                     <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Guardar Tarea</button>
         
                 </form>
