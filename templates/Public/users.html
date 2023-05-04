@@ -36,11 +36,11 @@
       <td>{{ row[8] }}</td>
       <td>{{ row[9] }}</td>
       <td>
-        <a href="{{url_for('editar', id=row[0]) }}" class="btn btn-primary">Editar</a>
+        <a href="{{url_for('editar', id=row[0]) }}" class="btn btn-primary"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
         {%if row[0] == 99887766%}
-        <a href="{{url_for('SuperUser')}}" class="btn btn-success">SuperUser</a>
+        <a href="{{url_for('SuperUser')}}" class="btn btn-success"><i class="fa fa-diamond" aria-hidden="true"></i></a>
         {%else%}
-        <a  href="{{url_for('eliminar',id=row[0])}}" class="btn btn-danger">Eliminar</a>
+        <a  href="{{url_for('eliminar',id=row[0])}}" class="btn btn-danger"><i class="fa fa-window-close" aria-hidden="true"></i></a>
         {%endif%}
       </td>
     </tr>
