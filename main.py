@@ -5,6 +5,7 @@ import mysql.connector
 from datetime import datetime
 from dotenv import load_dotenv
 import os
+import re
 
 #Declaracion de variables de entorno
 load_dotenv()
@@ -171,18 +172,28 @@ def AgregarUser():
         DNI_Repetido = cursor.fetchone()
         cursor.close() #cerrrando conexion SQL
 
+        patron = "^[0-9]+$" #Para verificacion de DNI y TELEFONOS
+
+        #Verifica si ya esta resgistrado previamente en la base de datos
         if DNI_Repetido:
             flash("El DNI ya se encuentra registrado",'warning')
             return render_template('/Public/AgregarUser.html')
-        elif not DNI or not primer_apellido or not primer_nombre or not telefono or not fecha_nacimiento or not direccion:
+        
+        #Verifica que no falte ninguno de los campos obligatorios
+        elif not DNI or not primer_apellido or not primer_nombre or not telefono or not fecha_nacimiento or not direccion or not username or not password:
             flash('Ingrese correctamente los campos obligatorios','warning')
             return render_template('/Public/AgregarUser.html')
-        elif int(DNI) < 0:
-            flash('El DNI no puede ser un numero negativo','danger')
+        
+        #Verfica que el DNI no sea negativo o contega letras
+        elif not re.match(patron, DNI):
+            flash('El DNI no puede ser un numero negativo, o contener letras.','danger')
             return render_template('/Public/AgregarUser.html')
-        elif int(telefono) < 0:
-            flash('El numero de telefono no puede ser negativo', 'danger')
+        
+        #Verfica que el Telefono no sea negativo o contenga letras
+        elif not re.match(patron, telefono):
+            flash('El numero de telefono no puede ser negativo, o contener letras.', 'danger')
             return render_template('/Public/AgregarUser.html')
+        
         #Insertando datos en la base de datos
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO users (DNI ,primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, fecha_nacimiento, direccion, username, password) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (DNI,primer_nombre,segundo_nombre,primer_apellido,segundo_apellido,telefono,fecha_nacimiento,direccion,username,password))
