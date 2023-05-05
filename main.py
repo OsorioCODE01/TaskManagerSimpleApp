@@ -126,9 +126,11 @@ def AgregarTask():
         user_id = session['user_id']
         task_name = request.form['task_name']
         description = request.form['description']
-        if not task_name or not description:
+        #Restricciones
+        if not task_name or not description: 
             flash('Debe llenar los campos indicados','warning')
             return redirect(url_for('AgregarTask'))
+        
         cursor = mysql.connection.cursor()
         cursor.execute("INSERT INTO tasks (user_id, task_name, description) VALUES (%s, %s ,%s)", (user_id, task_name, description))
         mysql.connection.commit()
@@ -163,7 +165,7 @@ def AgregarUser():
         password = request.form['password']
 
         #Validando Datos
-        # Comprobando si ya existe la cuenta de Usuario con respecto al email
+        # Comprobando si ya existe la cuenta de Usuario con respecto al id registrado
         cursor = mysql.connection.cursor()
         cursor.execute('SELECT * FROM users WHERE DNI = %s', (DNI,))
         DNI_Repetido = cursor.fetchone()
@@ -177,6 +179,9 @@ def AgregarUser():
             return render_template('/Public/AgregarUser.html')
         elif int(DNI) < 0:
             flash('El DNI no puede ser un numero negativo','danger')
+            return render_template('/Public/AgregarUser.html')
+        elif int(telefono) < 0:
+            flash('El numero de telefono no puede ser negativo', 'danger')
             return render_template('/Public/AgregarUser.html')
         #Insertando datos en la base de datos
         cur = mysql.connection.cursor()
